@@ -3,6 +3,7 @@ package com.psg.serviceapp
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.psg.communication.IMessageService
 import com.psg.serviceapp.common.CryptoUtil
 
 
@@ -19,17 +20,16 @@ class RemoteService : Service() {
             val decrypted = try {
                 CryptoUtil.decrypt(encryptedMessage)
             } catch (e: Exception) {
-                return CryptoUtil.encrypt("ERROR: Decryption failed")
+                return CryptoUtil.encrypt("ERROR: Decryption failed $e")
             }
 
-            val processed = decrypted
-                .reversed()
-                .uppercase() +
-                    " | " + System.currentTimeMillis()
+            val processed = decrypted.reversed().uppercase() + " | " + System.currentTimeMillis()
 
             return CryptoUtil.encrypt(processed)
         }
     }
 
     override fun onBind(intent: Intent?): IBinder = binder
+
+
 }
